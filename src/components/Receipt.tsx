@@ -13,6 +13,7 @@ interface ReceiptProps {
     playlists: SpotifyPlaylist[];
   };
   selectedFont: string;
+  canvas?: string;
 }
 
 const dateStr = () => new Date().toLocaleString();
@@ -23,7 +24,7 @@ const friendlyRange: Record<ReceiptProps['timeRange'], string> = {
   long_term: 'All Time'
 };
 
-const Receipt: React.FC<ReceiptProps> = ({ user, timeRange, sections, selectedFont }) => {
+const Receipt: React.FC<ReceiptProps> = ({ user, timeRange, sections, selectedFont, canvas }) => {
   const recent = sections.recent.slice(0,10);
   const topT = sections.topTracks.slice(0,10);
   const topA = sections.topArtists.slice(0,10);
@@ -51,9 +52,20 @@ const Receipt: React.FC<ReceiptProps> = ({ user, timeRange, sections, selectedFo
     url: p.external_urls?.spotify
   });
 
+  // decide background style; allow 'none' to disable image
+  const bgStyle: React.CSSProperties = { fontFamily: selectedFont };
+  if (canvas && canvas !== 'none') {
+    // use runtime-resolved path as-is (e.g., '/paper.png')
+    bgStyle.background = `url(${canvas}) center/cover no-repeat, var(--paper-bg, #fff)`;
+  } else {
+  // if none, explicitly remove background image and use paper bg color
+  bgStyle.backgroundImage = 'none';
+  bgStyle.backgroundColor = 'var(--paper-bg, transparent)';
+  }
+
   return (
     <div className="receipt-wrapper">
-      <div className="paper" style={{ fontFamily: selectedFont }}>
+      <div className="paper" style={bgStyle}>
         <div className="r-head">
           <h3 className="store f1">ROTIFY RECEIPT</h3>
           <div className="meta f2">User: {user?.display_name || 'Anon'} | {friendlyRange[timeRange]}</div>

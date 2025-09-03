@@ -11,12 +11,14 @@ interface DataTogglesProps {
   receiptActive: boolean;
   selectedFont: string;
   onFontChange: (font: string) => void;
+  selectedCanvas: string;
+  onCanvasChange: (c: string) => void;
   onExportImage: () => void;
   onExportPdf: () => void;
   exportBusy: boolean;
 }
 
-const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, onTimeRangeChange, onRefresh, onToggleReceipt, receiptActive, selectedFont, onFontChange, onExportImage, onExportPdf, exportBusy }) => {
+const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, onTimeRangeChange, onRefresh, onToggleReceipt, receiptActive, selectedFont, onFontChange, selectedCanvas, onCanvasChange, onExportImage, onExportPdf, exportBusy }) => {
   const set = (key: keyof typeof show) => onChange({ ...show, [key]: !show[key] });
   const fontOptions = [
     { name: 'JetBrains Mono', value: 'JetBrains Mono' },
@@ -30,6 +32,23 @@ const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, on
     { name: 'Nova Mono', value: 'Nova Mono' },
     { name: 'Cutive Mono', value: 'Cutive Mono' }
   ];
+  const canvasOptions = [
+    { name: 'Paper (default)', value: '/paper.png' },
+    { name: 'Bananas', value: '/bananas.png' },
+    { name: 'Ancient', value: '/ancient.png' },
+    { name: 'Notebook', value: '/notebook.png' },
+    { name: 'Origami', value: '/origami.png' },
+    { name: 'Washed', value: '/washed.png' },
+  ];
+
+  // On mount pick a random canvas and notify parent so the dropdown shows a random choice each time
+  React.useEffect(() => {
+    const options = ['/paper.png', '/bananas.png', '/ancient.png', '/notebook.png', '/origami.png', '/washed.png'];
+    const idx = Math.floor(Math.random() * options.length);
+    const randomValue = options[idx];
+    // Only change if different to avoid unnecessary updates
+    if (randomValue !== selectedCanvas) onCanvasChange(randomValue);
+  }, [onCanvasChange, selectedCanvas]);
   return (
     <div className="data-toggles">
       <div className="toggle-group">
@@ -56,6 +75,13 @@ const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, on
         <label>Font: 
           <select value={selectedFont} onChange={e => onFontChange(e.target.value)}>
             {fontOptions.map(f => <option key={f.value} value={f.value}>{f.name}</option>)}
+          </select>
+        </label>
+      </div>
+      <div className="canvas-group">
+        <label>Canvas: 
+          <select value={selectedCanvas} onChange={e => onCanvasChange(e.target.value)}>
+            {canvasOptions.map(c => <option key={c.value} value={c.value}>{c.name}</option>)}
           </select>
         </label>
       </div>

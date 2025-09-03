@@ -36,6 +36,7 @@ function App() {
   const [timeRange, setTimeRange] = useState<'short_term' | 'medium_term' | 'long_term'>('short_term');
   const [loading, setLoading] = useState(false);
   const [selectedFont, setSelectedFont] = useState('JetBrains Mono');
+  const [selectedCanvas, setSelectedCanvas] = useState('/paper.png');
   const [exportBusy, setExportBusy] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const token = localStorage.getItem('spotify_token');
@@ -196,6 +197,8 @@ function App() {
               receiptActive={showReceipt}
               selectedFont={selectedFont}
               onFontChange={setSelectedFont}
+              selectedCanvas={selectedCanvas}
+              onCanvasChange={setSelectedCanvas}
               onExportImage={exportImage}
               onExportPdf={exportPdf}
               exportBusy={exportBusy}
@@ -211,6 +214,11 @@ function App() {
                   playlists: show.playlists ? playlists : []
                 }}
                 selectedFont={selectedFont}
+                // pass selected canvas image path (or 'none')
+                // Receipt will use this to set the background image
+                // default is '/paper.png'
+                // keep prop name short
+                canvas={selectedCanvas}
               />
             )}
             {loading && <LoadingSpinner message="Loading music data..." />}

@@ -60,6 +60,26 @@
   font-size: 0.9rem;
 }
 
+.canvas-group {
+  margin-bottom: 0.5rem;
+}
+
+.canvas-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.canvas-group select {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
 .export-group {
   display: flex;
   gap: 0.5rem;
