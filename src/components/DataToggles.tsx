@@ -59,16 +59,16 @@ const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, on
           </select>
         </label>
       </div>
+      <div className="action-buttons">
+        <button className="btn small" onClick={onRefresh}>Refresh</button>
+        <button className={`btn small ${receiptActive ? 'active' : ''}`} onClick={onToggleReceipt}>{receiptActive ? 'Hide' : 'Show'} Receipt</button>
+      </div>
       {receiptActive && (
         <div className="export-group">
           <button className="btn small" disabled={exportBusy} onClick={onExportImage}>Export Image</button>
           <button className="btn small" disabled={exportBusy} onClick={onExportPdf}>Export PDF</button>
         </div>
       )}
-      <div className="action-buttons">
-        <button className="btn small" onClick={onRefresh}>Refresh</button>
-        <button className={`btn small ${receiptActive ? 'active' : ''}`} onClick={onToggleReceipt}>{receiptActive ? 'Hide' : 'Show'} Receipt</button>
-      </div>
     </div>
   );
 };

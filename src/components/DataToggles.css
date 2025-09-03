@@ -63,11 +63,29 @@
 .export-group {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .export-group .btn {
   flex: 1;
+  background: #1db954;
+  color: #ffffff;
+  border-color: #1db954;
+  transition: all 0.2s ease;
+}
+
+.export-group .btn:hover:not(:disabled) {
+  background: #1ed760;
+  border-color: #1ed760;
+  transform: translateY(-1px);
+}
+
+.export-group .btn:disabled {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .action-buttons {
