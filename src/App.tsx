@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import SpotifyAuth from './SpotifyAuth';
-import { getUserProfile, getRecentlyPlayed } from './SpotifyService';
-import './App.css';
+import SpotifyAuth from './components/SpotifyAuth';
+import { getUserProfile, getRecentlyPlayed } from './services/SpotifyService';
+import './styles/App.css';
 
 interface SpotifyUser {
   display_name: string;

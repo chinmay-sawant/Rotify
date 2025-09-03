@@ -8,7 +8,13 @@ export const getUserProfile = async (token: string) => {
   });
   return response.data;
 };
-// Add more functions for tracks, playlists, etc.
+
+export const getRecentlyPlayed = async (token: string, limit: number = 10) => {
+  const response = await axios.get(`${apiUrl}/me/player/recently-played?limit=${limit}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data.items.map((item: any) => item.track);
+};
 
 export const getUserPlaylists = async (token: string) => {
   const response = await axios.get(`${apiUrl}/me/playlists`, {
@@ -30,3 +36,5 @@ export const getPlaylistTracks = async (token: string, playlistId: string) => {
   });
   return response.data;
 };
+
+// Add more functions for tracks, playlists, etc.
