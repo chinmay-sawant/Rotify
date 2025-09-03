@@ -11,5 +11,5 @@ export default defineConfig({
     outDir: 'docs',
     assetsDir: 'assets',
   },
-  base: '/Rotify/',
+  base: '',
 })
