@@ -99,7 +99,14 @@ const SpotifyAuth = () => {
       <div className="auth-container">
         <div className="auth-header">
           <div className="brand-logo-wrapper">
-            <img src="/rotify_500x500.png" alt="Rotify" className="brand-logo" />
+            {/* Use a runtime-resolved path so GitHub Pages project site can find the image at /Rotify/ */}
+            {(() => {
+              const isBrowser = typeof window !== 'undefined' && typeof location !== 'undefined';
+              const pathname = isBrowser ? location.pathname : '/';
+              const prefix = pathname.startsWith('/Rotify') || pathname.startsWith('/chinmay-sawant/Rotify') ? '/Rotify/' : './';
+              const src = `${prefix}rotify_500x500.png`;
+              return <img src={src} alt="Rotify" className="brand-logo" />;
+            })()}
           </div>
           <h1 className="auth-title brand-text">Rotify</h1>
           <p className="auth-subtitle">Connect your Spotify account to discover your music journey</p>
