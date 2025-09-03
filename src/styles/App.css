@@ -40,15 +40,10 @@
   --shadow-color: var(--shadow-light);
   --card-bg: var(--card-bg-light);
   --header-bg: var(--header-bg-light);
-  --body-gradient: linear-gradient(
-    135deg,
-    #ffeaa7 0%,
-    #fab1a0 50%,
-    #fd79a8 100%
-  );
-  --card-gradient: var(--gradient-warm);
-  --header-gradient: var(--gradient-warm);
-  --title-gradient: var(--gradient-secondary);
+  --body-gradient: #ffffff; /* simplified */
+  --card-gradient: none;
+  --header-gradient: none;
+  --title-gradient: none;
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   --feature-bg: rgba(255, 255, 255, 0.6);
   --feature-border: rgba(0, 0, 0, 0.1);
@@ -80,15 +75,10 @@
   --shadow-color: var(--shadow-dark);
   --card-bg: var(--card-bg-dark);
   --header-bg: var(--header-bg-dark);
-  --body-gradient: linear-gradient(
-    135deg,
-    #667eea 0%,
-    #764ba2 50%,
-    #f093fb 100%
-  );
-  --card-gradient: var(--gradient-primary);
-  --header-gradient: var(--gradient-primary);
-  --title-gradient: var(--gradient-accent);
+  --body-gradient: #000000; /* simplified */
+  --card-gradient: none;
+  --header-gradient: none;
+  --title-gradient: none;
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   --feature-bg: rgba(255, 255, 255, 0.05);
   --feature-border: rgba(255, 255, 255, 0.1);
@@ -131,30 +121,7 @@ body {
 
 /* Animated background particles */
 body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: radial-gradient(
-      circle at 20% 80%,
-      rgba(120, 119, 198, 0.3) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(255, 119, 198, 0.3) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 40% 40%,
-      rgba(120, 219, 255, 0.3) 0%,
-      transparent 50%
-    );
-  animation: float 20s ease-in-out infinite;
-  pointer-events: none;
-  z-index: -1;
+  content: none;
 }
 
 .app {
@@ -204,40 +171,76 @@ body::before {
 
 .section-title {
   color: var(--text-primary);
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin: 0 0 2rem 0;
-  text-align: center;
-  background: var(--title-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: fadeInUp 0.8s ease-out 0.3s both;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+}
+.section-title.plain {
+  background: none;
+  -webkit-text-fill-color: initial;
 }
 
 /* Track container styles with animations */
 .tracks-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  animation: fadeInUp 0.8s ease-out 0.5s both;
+  gap: 0.5rem;
+}
+.tracks-container.minimal {
+  grid-template-columns: 1fr;
 }
 
-.track-card {
-  background: var(--card-bg);
-  backdrop-filter: blur(15px);
-  border-radius: 16px;
-  padding: 1.25rem;
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-color);
+/* Old card style removed for minimal view */
+.track-row {
   display: flex;
+  gap: 0.75rem;
   align-items: center;
-  gap: 1rem;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  transition: background 0.2s ease;
+}
+.track-row:hover {
+  background: var(--bg-primary);
+}
+.track-row .thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+.track-row .t-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.track-row .t-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
   overflow: hidden;
-  animation: fadeInScale 0.6s ease-out;
-  animation-fill-mode: both;
+  text-overflow: ellipsis;
+}
+.track-row .t-artist {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-row .index {
+  width: 1.5rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+.track-row .grow {
+  flex: 1;
+}
+.track-row .duration {
+  font-size: 0.7rem;
+  opacity: 0.6;
 }
 
 .track-card:nth-child(1) {
@@ -378,17 +381,208 @@ body::before {
   }
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateX(0) translateY(0) rotate(0deg);
-  }
-  33% {
-    transform: translateX(30px) translateY(-30px) rotate(120deg);
-  }
-  66% {
-    transform: translateX(-20px) translateY(20px) rotate(240deg);
-  }
+/* removed background float animation */
+/* New sections */
+.data-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.data-toggles .toggle-group {
+  display: flex;
+  gap: 0.75rem;
+}
+.data-toggles label {
+  font-size: 0.75rem;
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  cursor: pointer;
+}
+.data-toggles select {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.75rem;
+}
+.btn.small {
+  font-size: 0.7rem;
+  padding: 0.4rem 0.7rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn.small.active {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+.btn.small:hover {
+  background: var(--bg-primary);
+}
+
+.artists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+.artist-card {
+  text-decoration: none;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-secondary);
+}
+.artist-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.artist-name {
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+.playlists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+.playlist-card {
+  text-decoration: none;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--bg-secondary);
+}
+.playlist-card img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.playlist-name {
+  font-size: 0.75rem;
+}
+
+/* Receipt styles */
+.receipt-wrapper {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+.paper {
+  background: url(/paper.png) center/cover no-repeat, #fff;
+  width: 320px;
+  min-height: 500px;
+  padding: 1.25rem 0.9rem 2rem;
+  color: #111;
+  font-family: "Courier New", monospace;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ccc;
+}
+[data-theme="dark"] .paper {
+  background: url(/paper.png) center/cover no-repeat, #111;
+  color: #eee;
+}
+.r-head {
+  text-align: center;
+  border-bottom: 1px dashed #999;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.r-head .store {
+  letter-spacing: 2px;
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+.meta {
+  font-size: 0.55rem;
+  line-height: 1.2;
+}
+.r-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.line {
+  display: flex;
+  gap: 0.4rem;
+  font-size: 0.6rem;
+  align-items: baseline;
+}
+.line .idx {
+  opacity: 0.6;
+  width: 1.1rem;
+}
+.line .t {
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.line .artist {
+  opacity: 0.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 45%;
+}
+.r-foot {
+  margin-top: 1rem;
+  border-top: 1px dashed #999;
+  padding-top: 0.5rem;
+  font-size: 0.55rem;
+  text-align: center;
+}
+.barcode {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin: 0.4rem 0;
+}
+.barcode span {
+  display: block;
+  width: 2px;
+  background: #111;
+  height: 24px;
+}
+[data-theme="dark"] .barcode span {
+  background: #eee;
+}
+
+/* fun font alternates */
+.f1 {
+  font-family: "Courier New", monospace;
+}
+.f2 {
+  font-family: monospace;
+  font-weight: 500;
+}
+.f3 {
+  font-family: "Courier New", monospace;
+  font-style: italic;
+}
+.f4 {
+  font-family: "Courier New", monospace;
+  letter-spacing: 1px;
 }
 
 /* Theme transition animation */

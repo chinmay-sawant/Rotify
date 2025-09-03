@@ -1,0 +1,7 @@
+.data-toggles {
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  margin-bottom: 0.75rem;
+}
