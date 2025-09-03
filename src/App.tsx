@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import SpotifyAuth from './components/SpotifyAuth';
+import Header from './components/Header';
+import ThemeToggle from './components/ThemeToggle';
+import LoadingSpinner from './components/LoadingSpinner';
 import { getUserProfile, getRecentlyPlayed } from './services/SpotifyService';
+import { useTheme } from './hooks/useTheme';
 import './styles/App.css';
 
 interface SpotifyUser {
@@ -18,12 +22,17 @@ interface Track {
 function App() {
   const [user, setUser] = useState<SpotifyUser | null>(null);
   const [tracks, setTracks] = useState<Track[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   const token = localStorage.getItem('spotify_token');
 
   useEffect(() => {
     if (token) {
-      getUserProfile(token).then(setUser);
-      getRecentlyPlayed(token, 10).then(setTracks);
+      setLoading(true);
+      Promise.all([
+        getUserProfile(token).then(setUser),
+        getRecentlyPlayed(token, 10).then(setTracks)
+      ]).finally(() => setLoading(false));
     }
   }, [token]);
 
@@ -33,27 +42,43 @@ function App() {
     window.location.reload();
   };
 
+  const themeToggle = <ThemeToggle theme={theme} onToggle={toggleTheme} />;
+
   return (
     <div className="app">
       {!token ? (
-        <SpotifyAuth />
+        <div className="auth-wrapper">
+          <div className="theme-toggle-container">
+            {themeToggle}
+          </div>
+          <SpotifyAuth />
+        </div>
       ) : (
-        <div>
-          <button onClick={logout} className="logout-btn">Logout</button>
-          <h1>Welcome, {user?.display_name}!</h1>
-          <h2>Your Recently Played Tracks</h2>
-          <div className="tracks-container">
-            {tracks.map((track, index) => (
-              <div key={index} className="track-card">
-                {track.album?.images?.[0] && (
-                  <img src={track.album.images[0].url} alt={track.album.name || 'Album'} className="track-image" />
-                )}
-                <div className="track-info">
-                  <h3>{track.name}</h3>
-                  <p>{track.artists?.map(artist => artist.name).join(', ') || 'Unknown Artist'}</p>
-                </div>
+        <div className="main-content">
+          <Header 
+            user={user} 
+            onLogout={logout} 
+            themeToggle={themeToggle}
+          />
+          <div className="content">
+            <h2 className="section-title">Your Recently Played Tracks</h2>
+            {loading ? (
+              <LoadingSpinner message="Loading your recently played tracks..." />
+            ) : (
+              <div className="tracks-container">
+                {tracks.map((track, index) => (
+                  <div key={index} className="track-card">
+                    {track.album?.images?.[0] && (
+                      <img src={track.album.images[0].url} alt={track.album.name || 'Album'} className="track-image" />
+                    )}
+                    <div className="track-info">
+                      <h3>{track.name}</h3>
+                      <p>{track.artists?.map(artist => artist.name).join(', ') || 'Unknown Artist'}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         </div>
       )}
