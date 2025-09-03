@@ -31,11 +31,11 @@ function App() {
   const [topTracks, setTopTracks] = useState<Track[]>([]);
   const [topArtists, setTopArtists] = useState<SpotifyArtist[]>([]);
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
-  const [show, setShow] = useState<{ recent: boolean; topTracks: boolean; topArtists: boolean; playlists: boolean }>({ recent: true, topTracks: false, topArtists: false, playlists: false });
-  const [showReceipt, setShowReceipt] = useState(false);
+  const [show, setShow] = useState<{ recent: boolean; topTracks: boolean; topArtists: boolean; playlists: boolean }>({ recent: true, topTracks: true, topArtists: true, playlists: true });
+  const [showReceipt, setShowReceipt] = useState(true);
   const [timeRange, setTimeRange] = useState<'short_term' | 'medium_term' | 'long_term'>('short_term');
   const [loading, setLoading] = useState(false);
-  const [selectedFont, setSelectedFont] = useState('VT323');
+  const [selectedFont, setSelectedFont] = useState('JetBrains Mono');
   const [exportBusy, setExportBusy] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const token = localStorage.getItem('spotify_token');
@@ -227,6 +227,7 @@ function App() {
                             <span className="t-name">{track.name}</span>
                             <span className="t-artist">{track.artists?.map(a => a.name).join(', ')}</span>
                           </div>
+                          <span className="duration">{formatDuration(track.duration_ms)}</span>
                         </a>
                       ))}
                     </div>
@@ -257,6 +258,8 @@ function App() {
                         <a key={i} className="artist-card" href={artist.external_urls?.spotify} target="_blank" rel="noreferrer">
                           {artist.images?.[0] && <img src={artist.images[0].url} alt={artist.name} />}
                           <span className="artist-name">{artist.name}</span>
+                          <span className="artist-genres">{artist.genres?.slice(0, 2).join(', ') || 'Various'}</span>
+                          <span className="artist-popularity">♫ {artist.popularity || 0}</span>
                         </a>
                       ))}
                     </div>
@@ -270,6 +273,7 @@ function App() {
                         <a key={i} className="playlist-card" href={pl.external_urls?.spotify} target="_blank" rel="noreferrer">
                           {pl.images?.[0] && <img src={pl.images[0].url} alt={pl.name} />}
                           <span className="playlist-name">{pl.name}</span>
+                          <span className="playlist-total">{pl.tracks?.total || 0} tracks</span>
                         </a>
                       ))}
                     </div>

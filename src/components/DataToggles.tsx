@@ -19,12 +19,16 @@ interface DataTogglesProps {
 const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, onTimeRangeChange, onRefresh, onToggleReceipt, receiptActive, selectedFont, onFontChange, onExportImage, onExportPdf, exportBusy }) => {
   const set = (key: keyof typeof show) => onChange({ ...show, [key]: !show[key] });
   const fontOptions = [
-    { name: 'VT323', value: 'VT323' },
-    { name: 'Space Mono', value: 'Space Mono' },
-    { name: 'IBM Plex Mono', value: 'IBM Plex Mono' },
-    { name: 'Source Code Pro', value: 'Source Code Pro' },
-    { name: 'Libertinus Keyboard', value: 'Libertinus Keyboard' },
-    { name: 'Asimovian', value: 'Asimovian' }
+    { name: 'JetBrains Mono', value: 'JetBrains Mono' },
+    { name: 'Fira Code', value: 'Fira Code' },
+    { name: 'Ubuntu Mono', value: 'Ubuntu Mono' },
+    { name: 'Inconsolata', value: 'Inconsolata' },
+    { name: 'PT Mono', value: 'PT Mono' },
+    { name: 'Courier Prime', value: 'Courier Prime' },
+    { name: 'Anonymous Pro', value: 'Anonymous Pro' },
+    { name: 'Share Tech Mono', value: 'Share Tech Mono' },
+    { name: 'Nova Mono', value: 'Nova Mono' },
+    { name: 'Cutive Mono', value: 'Cutive Mono' }
   ];
   return (
     <div className="data-toggles">
@@ -55,12 +59,16 @@ const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, on
           </select>
         </label>
       </div>
-      <div className="export-group">
-        <button className="btn small" disabled={exportBusy} onClick={onExportImage}>Export Image</button>
-        <button className="btn small" disabled={exportBusy} onClick={onExportPdf}>Export PDF</button>
+      {receiptActive && (
+        <div className="export-group">
+          <button className="btn small" disabled={exportBusy} onClick={onExportImage}>Export Image</button>
+          <button className="btn small" disabled={exportBusy} onClick={onExportPdf}>Export PDF</button>
+        </div>
+      )}
+      <div className="action-buttons">
+        <button className="btn small" onClick={onRefresh}>Refresh</button>
+        <button className={`btn small ${receiptActive ? 'active' : ''}`} onClick={onToggleReceipt}>{receiptActive ? 'Hide' : 'Show'} Receipt</button>
       </div>
-      <button className="btn small" onClick={onRefresh}>Refresh</button>
-      <button className={`btn small ${receiptActive ? 'active' : ''}`} onClick={onToggleReceipt}>{receiptActive ? 'Hide' : 'Show'} Receipt</button>
     </div>
   );
 };

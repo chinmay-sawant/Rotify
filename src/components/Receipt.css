@@ -19,13 +19,13 @@
   opacity: 0.8;
 }
 .f5 {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
 }
 .f6 {
-  font-family: "Space Mono", monospace;
+  font-family: "Fira Code", monospace;
 }
 .f7 {
-  font-family: "VT323", monospace;
+  font-family: "Ubuntu Mono", monospace;
   font-size: 0.65rem;
 }
 .receipt-controls {
