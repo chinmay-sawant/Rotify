@@ -9,10 +9,23 @@ interface DataTogglesProps {
   onRefresh: () => void;
   onToggleReceipt: () => void;
   receiptActive: boolean;
+  selectedFont: string;
+  onFontChange: (font: string) => void;
+  onExportImage: () => void;
+  onExportPdf: () => void;
+  exportBusy: boolean;
 }
 
-const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, onTimeRangeChange, onRefresh, onToggleReceipt, receiptActive }) => {
+const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, onTimeRangeChange, onRefresh, onToggleReceipt, receiptActive, selectedFont, onFontChange, onExportImage, onExportPdf, exportBusy }) => {
   const set = (key: keyof typeof show) => onChange({ ...show, [key]: !show[key] });
+  const fontOptions = [
+    { name: 'VT323', value: 'VT323' },
+    { name: 'Space Mono', value: 'Space Mono' },
+    { name: 'IBM Plex Mono', value: 'IBM Plex Mono' },
+    { name: 'Source Code Pro', value: 'Source Code Pro' },
+    { name: 'Libertinus Keyboard', value: 'Libertinus Keyboard' },
+    { name: 'Asimovian', value: 'Asimovian' }
+  ];
   return (
     <div className="data-toggles">
       <div className="toggle-group">
@@ -22,11 +35,29 @@ const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, on
         <label><input type="checkbox" checked={show.playlists} onChange={() => set('playlists')} /> Playlists</label>
       </div>
       <div className="time-range-group">
-  <select value={timeRange} onChange={e => onTimeRangeChange(e.target.value as 'short_term' | 'medium_term' | 'long_term')}>
+        <select value={timeRange} onChange={e => {
+          const val = e.target.value as 'short_term' | 'medium_term' | 'long_term';
+          onTimeRangeChange(val);
+        }}>
           <option value="short_term">4 Weeks</option>
             <option value="medium_term">6 Months</option>
             <option value="long_term">All Time</option>
+      <option disabled>────────</option>
+      <option value="short_term">Recent (1 Mo)</option>
+      <option value="medium_term">Season (6 Mo)</option>
+      <option value="long_term">Legacy (All)</option>
         </select>
+      </div>
+      <div className="font-group">
+        <label>Font: 
+          <select value={selectedFont} onChange={e => onFontChange(e.target.value)}>
+            {fontOptions.map(f => <option key={f.value} value={f.value}>{f.name}</option>)}
+          </select>
+        </label>
+      </div>
+      <div className="export-group">
+        <button className="btn small" disabled={exportBusy} onClick={onExportImage}>Export Image</button>
+        <button className="btn small" disabled={exportBusy} onClick={onExportPdf}>Export PDF</button>
       </div>
       <button className="btn small" onClick={onRefresh}>Refresh</button>
       <button className={`btn small ${receiptActive ? 'active' : ''}`} onClick={onToggleReceipt}>{receiptActive ? 'Hide' : 'Show'} Receipt</button>

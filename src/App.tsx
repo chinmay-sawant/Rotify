@@ -35,8 +35,106 @@ function App() {
   const [showReceipt, setShowReceipt] = useState(false);
   const [timeRange, setTimeRange] = useState<'short_term' | 'medium_term' | 'long_term'>('short_term');
   const [loading, setLoading] = useState(false);
+  const [selectedFont, setSelectedFont] = useState('VT323');
+  const [exportBusy, setExportBusy] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const token = localStorage.getItem('spotify_token');
+
+  const exportImage = async () => {
+    if (exportBusy) return;
+    setExportBusy(true);
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const el = document.querySelector('.paper') as HTMLElement | null;
+      if (!el) return;
+
+      // Get computed styles to understand padding
+      const computedStyle = window.getComputedStyle(el);
+      const paddingLeft = parseInt(computedStyle.paddingLeft);
+      const paddingRight = parseInt(computedStyle.paddingRight);
+      const paddingTop = parseInt(computedStyle.paddingTop);
+      const paddingBottom = parseInt(computedStyle.paddingBottom);
+
+      const canvas = await html2canvas(el, {
+        backgroundColor: '#fff',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        height: el.scrollHeight,
+        width: el.scrollWidth
+      });
+
+      // Get the actual content dimensions (excluding padding)
+      const contentWidth = el.scrollWidth - paddingLeft - paddingRight;
+      const contentHeight = el.scrollHeight - paddingTop - paddingBottom;
+
+      // Add some padding back (same as right padding)
+      const finalPadding = paddingRight; // Use right padding as reference
+      const finalWidth = contentWidth + finalPadding;
+      const finalHeight = contentHeight + finalPadding;
+
+      // Create trimmed canvas with content dimensions plus padding
+      const trimmedCanvas = document.createElement('canvas');
+      const trimmedCtx = trimmedCanvas.getContext('2d');
+      if (!trimmedCtx) return;
+
+      trimmedCanvas.width = finalWidth * 2; // scale factor
+      trimmedCanvas.height = finalHeight * 2; // scale factor
+
+      // Draw content area with some padding on left/top to match right/bottom
+      trimmedCtx.drawImage(
+        canvas,
+        (paddingLeft - finalPadding) * 2, // source x (accounting for scale) - add padding back
+        (paddingTop - finalPadding) * 2,  // source y (accounting for scale) - add padding back
+        finalWidth * 2, // source width
+        finalHeight * 2, // source height
+        0, 0, // destination x, y
+        finalWidth * 2, // destination width
+        finalHeight * 2 // destination height
+      );
+
+      const link = document.createElement('a');
+      link.download = 'rotify-receipt.png';
+      link.href = trimmedCanvas.toDataURL('image/png');
+      link.click();
+    } finally {
+      setExportBusy(false);
+    }
+  };
+
+  const exportPdf = async () => {
+    if (exportBusy) return; 
+    setExportBusy(true);
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const jsPDF = (await import('jspdf')).default;
+      const el = document.querySelector('.paper') as HTMLElement | null;
+      if (!el) return;
+      const canvas = await html2canvas(el, { backgroundColor: '#fff', scale: 2, useCORS: true, allowTaint: true, height: el.scrollHeight, width: el.scrollWidth });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth - 80;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 40;
+
+      pdf.addImage(imgData, 'PNG', 40, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 40, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save('rotify-receipt.pdf');
+    } finally { 
+      setExportBusy(false); 
+    }
+  };
 
   const loadData = useCallback(async () => {
     if (!token) return;
@@ -96,16 +194,27 @@ function App() {
               onRefresh={loadData}
               onToggleReceipt={() => setShowReceipt(r => !r)}
               receiptActive={showReceipt}
+              selectedFont={selectedFont}
+              onFontChange={setSelectedFont}
+              onExportImage={exportImage}
+              onExportPdf={exportPdf}
+              exportBusy={exportBusy}
             />
             {showReceipt && (
               <Receipt
                 user={user}
-                tracks={show.topTracks && topTracks.length ? topTracks.slice(0, 10) : recentTracks.slice(0, 10)}
                 timeRange={timeRange}
+                sections={{
+                  recent: show.recent ? recentTracks : [],
+                  topTracks: show.topTracks ? topTracks : [],
+                  topArtists: show.topArtists ? topArtists : [],
+                  playlists: show.playlists ? playlists : []
+                }}
+                selectedFont={selectedFont}
               />
             )}
             {loading && <LoadingSpinner message="Loading music data..." />}
-            {!loading && (
+            {!loading && !showReceipt && (
               <div className="data-sections">
                 {show.recent && recentTracks.length > 0 && (
                   <section>

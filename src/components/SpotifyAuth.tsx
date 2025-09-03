@@ -26,7 +26,14 @@ const SpotifyAuth = () => {
     try {
       const codeVerifier = generateRandomString(64);
       const codeChallenge = await generateCodeChallenge(codeVerifier);
-      const scope = 'user-read-private user-read-email user-read-recently-played';
+      const scope = [
+        'user-read-private',
+        'user-read-email',
+        'user-read-recently-played',
+        'user-top-read',
+        'playlist-read-private',
+        'playlist-read-collaborative'
+      ].join(' ');
       const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
       sessionStorage.setItem('code_verifier', codeVerifier);
       window.location.href = authUrl;
@@ -91,13 +98,11 @@ const SpotifyAuth = () => {
     <div className="spotify-auth">
       <div className="auth-container">
         <div className="auth-header">
-          <h1 className="auth-title">
-            <span className="spotify-icon">🎵</span>
-            Welcome to Rotify
-          </h1>
-          <p className="auth-subtitle">
-            Connect your Spotify account to discover your music journey
-          </p>
+          <div className="brand-logo-wrapper">
+            <img src="/rotify_500x500.png" alt="Rotify" className="brand-logo" />
+          </div>
+          <h1 className="auth-title brand-text">Rotify</h1>
+          <p className="auth-subtitle">Connect your Spotify account to discover your music journey</p>
         </div>
         
         <div className="auth-features">

@@ -1,11 +1,17 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import type { SpotifyTrack } from '../services/SpotifyService';
 import './Receipt.css';
 
 interface ReceiptProps {
   user: { display_name?: string } | null;
-  tracks: SpotifyTrack[];
   timeRange: 'short_term' | 'medium_term' | 'long_term';
+  sections: {
+    recent: SpotifyTrack[];
+    topTracks: SpotifyTrack[];
+    topArtists: { name: string; external_urls?: { spotify?: string } }[];
+    playlists: { name: string; external_urls?: { spotify?: string } }[];
+  };
+  selectedFont: string;
 }
 
 const dateStr = () => new Date().toLocaleString();
@@ -16,31 +22,30 @@ const friendlyRange: Record<ReceiptProps['timeRange'], string> = {
   long_term: 'All Time'
 };
 
-const fontClasses = ['f1','f2','f3','f4'];
-
-const Receipt: React.FC<ReceiptProps> = ({ user, tracks, timeRange }) => {
-  const items = useMemo(() => tracks.map((t, i) => ({
-    i: (i+1).toString().padStart(2,'0'),
+const Receipt: React.FC<ReceiptProps> = ({ user, timeRange, sections, selectedFont }) => {
+  const recent = sections.recent.slice(0,10);
+  const topT = sections.topTracks.slice(0,10);
+  const topA = sections.topArtists.slice(0,10);
+  const pls = sections.playlists.slice(0,10);
+  const mapTrack = (t: SpotifyTrack, i:number) => ({
+    idx: (i+1).toString().padStart(2,'0'),
     name: t.name,
-    artist: t.artists.map(a=>a.name).join(', '),
+    sub: t.artists.map(a=>a.name).join(', '),
     url: t.external_urls?.spotify
-  })), [tracks]);
+  });
   return (
     <div className="receipt-wrapper">
-      <div className="paper">
+      <div className="paper" style={{ fontFamily: selectedFont }}>
         <div className="r-head">
           <h3 className="store f1">ROTIFY RECEIPT</h3>
           <div className="meta f2">User: {user?.display_name || 'Anon'} | {friendlyRange[timeRange]}</div>
           <div className="meta f3">{dateStr()}</div>
         </div>
         <div className="r-body">
-          {items.map((it, idx) => (
-            <div className={`line ${fontClasses[idx % fontClasses.length]}`} key={idx}>
-              <span className="idx">{it.i}</span>
-              {it.url ? <a href={it.url} target="_blank" rel="noreferrer" className="t">{it.name}</a> : <span className="t">{it.name}</span>}
-              <span className="artist">{it.artist}</span>
-            </div>
-          ))}
+          {recent.length > 0 && <Section title="RECENT" items={recent.map(mapTrack)} />}
+          {topT.length > 0 && <Section title="TOP TRACKS" items={topT.map(mapTrack)} />}
+          {topA.length > 0 && <Section title="TOP ARTISTS" items={topA.map((a,i)=>({ idx:(i+1).toString().padStart(2,'0'), name:a.name, sub:'', url:a.external_urls?.spotify }))} />}
+          {pls.length > 0 && <Section title="PLAYLISTS" items={pls.map((p,i)=>({ idx:(i+1).toString().padStart(2,'0'), name:p.name, sub:'', url:p.external_urls?.spotify }))} />}
         </div>
         <div className="r-foot f4">
           <div>THANK YOU FOR LISTENING ♫</div>
@@ -54,5 +59,19 @@ const Receipt: React.FC<ReceiptProps> = ({ user, tracks, timeRange }) => {
     </div>
   );
 };
+
+interface SectionItem { idx: string; name: string; sub: string; url?: string }
+const Section: React.FC<{ title: string; items: SectionItem[] }> = ({ title, items }) => (
+  <div className="receipt-section">
+    <div className="sec-title f5">-- {title} --</div>
+    {items.map((it, idx) => (
+      <div className="line" key={idx}>
+        <span className="idx">{it.idx}</span>
+        {it.url ? <a href={it.url} target="_blank" rel="noreferrer" className="t">{it.name}</a> : <span className="t">{it.name}</span>}
+        {it.sub && <span className="artist">{it.sub}</span>}
+      </div>
+    ))}
+  </div>
+);
 
 export default Receipt;

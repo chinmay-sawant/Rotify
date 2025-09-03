@@ -12,9 +12,9 @@ export const getUserProfile = async (token: string) => {
 
 export interface SpotifyImage { url: string; height?: number; width?: number }
 export interface SpotifyExternal { spotify?: string }
-export interface SpotifyArtist { id: string; name: string; external_urls?: SpotifyExternal; images?: SpotifyImage[] }
+export interface SpotifyArtist { id: string; name: string; external_urls?: SpotifyExternal; images?: SpotifyImage[]; genres?: string[]; popularity?: number }
 export interface SpotifyTrack { id: string; name: string; duration_ms: number; artists: SpotifyArtist[]; album?: { name?: string; images?: SpotifyImage[] }; external_urls?: SpotifyExternal }
-export interface SpotifyPlaylist { id: string; name: string; images?: SpotifyImage[]; external_urls?: SpotifyExternal }
+export interface SpotifyPlaylist { id: string; name: string; images?: SpotifyImage[]; external_urls?: SpotifyExternal; owner?: { display_name?: string }; tracks?: { total?: number } }
 
 export const getRecentlyPlayed = async (token: string, limit: number = 10): Promise<SpotifyTrack[]> => {
   const { data } = await axios.get(`${apiUrl}/me/player/recently-played?limit=${limit}`, authHeaders(token));
