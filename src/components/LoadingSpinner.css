@@ -1,0 +1,219 @@
+/* Loading Spinner Component Styles */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 2rem;
+}
+
+.loading-spinner-wrapper {
+  text-align: center;
+  position: relative;
+}
+
+.music-loading-animation {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* Vinyl Record Animation */
+.vinyl-record {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+  border-radius: 50%;
+  position: relative;
+  animation: spin 3s linear infinite;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.vinyl-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: var(--text-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.vinyl-grooves {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.vinyl-grooves::before,
+.vinyl-grooves::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vinyl-grooves::before {
+  width: 45px;
+  height: 45px;
+}
+
+.vinyl-grooves::after {
+  width: 30px;
+  height: 30px;
+}
+
+/* Sound Waves Animation */
+.sound-waves {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+}
+
+.wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--text-secondary);
+  border-radius: 50%;
+  opacity: 0;
+  animation: pulse 2s ease-out infinite;
+}
+
+.wave-1 {
+  width: 100px;
+  height: 100px;
+  animation-delay: 0s;
+}
+
+.wave-2 {
+  width: 120px;
+  height: 120px;
+  animation-delay: 0.5s;
+}
+
+.wave-3 {
+  width: 140px;
+  height: 140px;
+  animation-delay: 1s;
+}
+
+.wave-4 {
+  width: 160px;
+  height: 160px;
+  animation-delay: 1.5s;
+}
+
+.loading-message {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  opacity: 0.8;
+  animation: fade 2s ease-in-out infinite alternate;
+}
+
+/* Animations */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+@keyframes fade {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .vinyl-record {
+    width: 60px;
+    height: 60px;
+  }
+
+  .vinyl-center {
+    width: 12px;
+    height: 12px;
+  }
+
+  .vinyl-grooves {
+    width: 45px;
+    height: 45px;
+  }
+
+  .vinyl-grooves::before {
+    width: 35px;
+    height: 35px;
+  }
+
+  .vinyl-grooves::after {
+    width: 25px;
+    height: 25px;
+  }
+
+  .sound-waves {
+    width: 100px;
+    height: 100px;
+  }
+
+  .wave-1 {
+    width: 80px;
+    height: 80px;
+  }
+  .wave-2 {
+    width: 100px;
+    height: 100px;
+  }
+  .wave-3 {
+    width: 120px;
+    height: 120px;
+  }
+  .wave-4 {
+    width: 140px;
+    height: 140px;
+  }
+
+  .loading-message {
+    font-size: 0.9rem;
+  }
+}

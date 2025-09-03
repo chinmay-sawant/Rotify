@@ -1,0 +1,49 @@
+.receipt-wrapper .paper a {
+  text-decoration: underline;
+}
+/* Force paper text dark for readability in dark theme */
+[data-theme="dark"] .paper {
+  color: #000 !important;
+  background: url(/paper.png) center/cover no-repeat, #fff;
+}
+[data-theme="dark"] .paper .barcode span {
+  background: #000;
+}
+.receipt-section {
+  margin-bottom: 0.6rem;
+}
+.receipt-section .sec-title {
+  text-align: center;
+  font-size: 0.55rem;
+  margin: 0.25rem 0 0.35rem;
+  opacity: 0.8;
+}
+.f5 {
+  font-family: "JetBrains Mono", monospace;
+}
+.f6 {
+  font-family: "Fira Code", monospace;
+}
+.f7 {
+  font-family: "Ubuntu Mono", monospace;
+  font-size: 0.65rem;
+}
+.receipt-controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.receipt-controls label {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.receipt-controls select {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
