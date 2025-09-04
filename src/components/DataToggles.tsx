@@ -41,14 +41,7 @@ const DataToggles: React.FC<DataTogglesProps> = ({ show, onChange, timeRange, on
     { name: 'Washed', value: 'washed.png' },
   ];
 
-  // On mount pick a random canvas and notify parent so the dropdown shows a random choice each time
-  React.useEffect(() => {
-  const options = ['paper.png', 'bananas.png', 'ancient.png', 'notebook.png', 'origami.png', 'washed.png'];
-    const idx = Math.floor(Math.random() * options.length);
-    const randomValue = options[idx];
-    // Only change if different to avoid unnecessary updates
-    if (randomValue !== selectedCanvas) onCanvasChange(randomValue);
-  }, [onCanvasChange, selectedCanvas]);
+  // Canvas selection is controlled by parent (App). No randomization here.
   return (
     <div className="data-toggles">
       <div className="toggle-group">

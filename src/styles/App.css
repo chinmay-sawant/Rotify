@@ -43,7 +43,12 @@
   --body-gradient: #ffffff; /* simplified */
   --card-gradient: none;
   --header-gradient: none;
-  --title-gradient: none;
+  /* Title gradient falls back to primary/secondary text colors so clipped text remains visible */
+  --title-gradient: linear-gradient(
+    90deg,
+    var(--text-primary) 0%,
+    var(--text-secondary) 100%
+  );
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   --feature-bg: rgba(255, 255, 255, 0.6);
   --feature-border: rgba(0, 0, 0, 0.1);
@@ -78,7 +83,12 @@
   --body-gradient: #000000; /* simplified */
   --card-gradient: none;
   --header-gradient: none;
-  --title-gradient: none;
+  /* Title gradient falls back to primary/secondary text colors so clipped text remains visible */
+  --title-gradient: linear-gradient(
+    90deg,
+    var(--text-primary) 0%,
+    var(--text-secondary) 100%
+  );
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   --feature-bg: rgba(255, 255, 255, 0.05);
   --feature-border: rgba(255, 255, 255, 0.1);

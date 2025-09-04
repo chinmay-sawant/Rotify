@@ -47,11 +47,8 @@
   transition: all 0.3s ease;
 }
 
-.logo-icon {
-  font-size: 2rem;
-  animation: pulse 2s infinite;
-  filter: drop-shadow(0 2px 4px var(--shadow-color));
-}
+/* Logo emoji — center with the title text and ensure it's visible */
+/* logo-icon removed: no longer needed */
 
 .header-right {
   display: flex;

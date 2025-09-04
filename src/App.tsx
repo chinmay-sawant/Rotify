@@ -36,7 +36,11 @@ function App() {
   const [timeRange, setTimeRange] = useState<'short_term' | 'medium_term' | 'long_term'>('short_term');
   const [loading, setLoading] = useState(false);
   const [selectedFont, setSelectedFont] = useState('JetBrains Mono');
-  const [selectedCanvas, setSelectedCanvas] = useState('/paper.png');
+  const canvasList = ['paper.png', 'bananas.png', 'ancient.png', 'notebook.png', 'origami.png', 'washed.png'];
+  const [selectedCanvas, setSelectedCanvas] = useState<string>(() => {
+    const idx = Math.floor(Math.random() * canvasList.length);
+    return canvasList[idx];
+  });
   const [exportBusy, setExportBusy] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const token = localStorage.getItem('spotify_token');
@@ -153,6 +157,16 @@ function App() {
   setTopTracks(topT as Track[]);
   setTopArtists(topA as SpotifyArtist[]);
   setPlaylists(pls as SpotifyPlaylist[]);
+    } catch (unknownErr) {
+      // If unauthorized, clear token and force a reload so user can re-auth
+      const err = unknownErr as { response?: { status?: number } } | undefined;
+      if (err?.response?.status === 401) {
+        localStorage.removeItem('spotify_token');
+        sessionStorage.removeItem('code_verifier');
+        window.location.reload();
+      } else {
+        console.error('Error loading Spotify data', unknownErr);
+      }
     } finally {
       setLoading(false);
     }
@@ -185,6 +199,7 @@ function App() {
             user={user} 
             onLogout={logout} 
             themeToggle={themeToggle}
+            isLoggedIn={!!token}
           />
           <div className="content">
             <DataToggles

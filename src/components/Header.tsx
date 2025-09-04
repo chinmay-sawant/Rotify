@@ -5,16 +5,14 @@ interface HeaderProps {
   user: { display_name: string } | null;
   onLogout: () => void;
   themeToggle: React.ReactNode;
+  isLoggedIn?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, onLogout, themeToggle }) => {
+const Header: React.FC<HeaderProps> = ({ user, onLogout, themeToggle, isLoggedIn }) => {
   return (
     <header className="app-header">
       <div className="header-left">
-        <h1 className="app-title">
-          <span className="logo-icon">🎵</span>
-          Rotify
-        </h1>
+  <h1 className="app-title">Rotify</h1>
       </div>
       <div className="header-right">
         {user && (
@@ -24,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout, themeToggle }) => {
         )}
         <div className="header-controls">
           {themeToggle}
-          {user && (
+          {isLoggedIn && (
             <button onClick={onLogout} className="logout-btn">
               <span className="logout-icon">🚪</span>
               Logout
